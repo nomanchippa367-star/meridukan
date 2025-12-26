@@ -4,7 +4,7 @@ from flask import Flask, render_template_string, send_from_directory
 app = Flask(__name__)
 
 SHOP_NAME = "NOMAN DRESS MATERIAL"
-CONTACT = "7597660035"
+CONTACT = "9694262268"
 
 @app.route('/')
 def home():
@@ -55,3 +55,4 @@ def serve_file(filename):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
