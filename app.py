@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, send_from_status
 
 app = Flask(__name__)
 
@@ -8,7 +8,7 @@ CONTACT = "7597660035"
 
 @app.route('/')
 def home():
-    # Ye line photos ko direct main folder mein dhoondegi jahan aapne upload ki hain
+    # Ye line photos ko direct main folder mein dhoondegi
     files = [f for f in os.listdir('.') if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     
     html = f'''
@@ -21,9 +21,10 @@ def home():
         <style>
             body {{ background: #f8f9fa; padding-top: 20px; font-family: sans-serif; }}
             .navbar {{ background: #2c3e50; color: white; padding: 15px; text-align: center; margin-bottom: 20px; }}
-            .card {{ border: none; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }}
-            .product-img {{ height: 280px; object-fit: cover; border-radius: 10px 10px 0 0; width: 100%; }}
-            .btn-wa {{ background: #25d366; color: white; font-weight: bold; width: 100%; border-radius: 0 0 10px 10px; padding: 10px; text-decoration: none; display: inline-block; }}
+            .card {{ border: none; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }}
+            .product-img {{ height: 280px; object-fit: cover; width: 100%; }}
+            .btn-wa {{ background: #25d366; color: white; font-weight: bold; width: 100%; padding: 12px; text-decoration: none; display: inline-block; text-align: center; }}
+            .btn-wa:hover {{ background: #128c7e; color: white; }}
         </style>
     </head>
     <body>
@@ -37,15 +38,17 @@ def home():
                 <div class="col-md-4 col-6">
                     <div class="card">
                         <img src="/{filename}" class="product-img">
-                        <div class="card-body p-0 text-center">
-                            <a href="https://wa.me/91{CONTACT}?text=Mujhe ye design chahiye: {filename}" class="btn-wa">WhatsApp Order</a>
-                        </div>
+                        <a href="https://wa.me/91{CONTACT}?text=Mujhe ye design chahiye: {filename}" class="btn-wa">WhatsApp Order</a>
                     </div>
                 </div>
         '''
 
     html += '</div></div></body></html>'
     return render_template_string(html)
+
+@app.route('/<path:filename>')
+def serve_file(filename):
+    return send_from_directory('.', filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
